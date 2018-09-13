@@ -1,0 +1,12 @@
+{
+    "user":[{"uid":1,"uname":"admin","upwd":"admin","urank":"超级管理员"}],
+    "project":[
+        {"id":"1","pid":"sf-001", "pname": "一二三四", "addtime": "2016-05-02"},
+        {"id":"2","pid":"sf-002", "pname": "一二三四", "addtime": "2016-05-02"},
+        {"id":"3","pid":"sf-003", "pname": "一二三四", "addtime": "2016-05-02"},
+        {"id":"4","pid":"sf-004", "pname": "一二三四", "addtime": "2016-05-02"},
+        {"id":"5","pid":"sf-005", "pname": "一二三四", "addtime": "2016-05-02"},
+        {"id":"6","pid":"sf-006", "pname": "一二三四", "addtime": "2016-05-02"}
+    ]
+
+}
