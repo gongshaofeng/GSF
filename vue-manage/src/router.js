@@ -14,6 +14,7 @@ import Permission from './components/page/Permission.vue'
 import login from './components/page/Login.vue'
 import error from './components/page/404.vue'
 import err from './components/page/403.vue'
+import back from './components/page/Allback.vue'
 
 
 
@@ -39,6 +40,7 @@ export default new Router({
     { path: '/login',component:login,meta:{title:"登录页"}},
     {path: '/403',component:err,meta:{title:"403页面"}},
     {path:'/404',component:error,meta:{title:"404页面"}},
-    { path: '*', redirect: '/404'}
+    { path: '*', redirect: '/404'},
+    { path: '/back', component:back}
   ]
 })

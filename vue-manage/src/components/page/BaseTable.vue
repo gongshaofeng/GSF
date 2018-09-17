@@ -24,7 +24,7 @@
                 <template slot-scope="scope">
                     <el-button
                         size="mini"
-                        @click="handleEdit()">编辑</el-button>
+                        @click="handleEdit(scope.row.id)">编辑</el-button>
                     <el-button
                         size="mini"
                         type="danger"
@@ -61,6 +61,7 @@
 </template>
 <script>
 export default {
+
     name:'basetable',
     data() {
         return {
@@ -97,6 +98,14 @@ export default {
         search:
             function (){
                 this.getProlist();
+            },
+        add:
+            function (){
+                // this.$router.replace({
+                //     path: '/login'
+                // })
+                this.getProlist();
+                console.log("执行了")
             }
     },
     updated(){
@@ -106,10 +115,15 @@ export default {
     methods: {
         // 项目数据/删除按钮
         deleteRow(index, rows) {
-            rows.splice(index, 1);
-            // console.log(index) //表格中数据的下标
-            this.gettableDate(),    //手动检测数据变化
-            this.deleteDate(index)
+            this.$confirm("确认删除？")
+            .then(res =>{
+                rows.splice(index, 1);
+                // console.log(index) //表格中数据的下标
+                this.gettableDate(),    //手动检测数据变化
+                this.deleteDate(index)
+            })
+            .catch(res =>{})
+
         },
         deleteDate(index){
             console.log(index)
@@ -140,7 +154,7 @@ export default {
         createP(){
             // 获取json有无相同的项目编码
             for(var i=0; i<this.tableDatas.length; i++){
-                if(this.tableData[i].pid != this.AddCode){
+                if(this.tableData[i].pid != this.AddCode || null ){
                     this.isTrue = true;
                 }else{
                     this.isTrue = false;
@@ -154,16 +168,18 @@ export default {
                         data: {
                             pid: this.AddCode,
                             pname: this.AddName,
-                            addtime: this.Addtime
+                            addtime: this.Addtime,
+                            adddesc: this.AddDesc
                         }
                     });
             }else{
                 this.$message('添加失败,编码重复或其他原因')
             }
-            console.log(2)
-            this.isT=true;
             this.addDialogVisible=false;    //关闭添加页
-            console.log(3)
+            this.AddName= '';
+            this.AddCode= '';    // 项目编码
+            this.AddDesc= '';
+            return this.isT=true;
         },
         // 添加页：添加项目
         AddP(){
@@ -181,6 +197,7 @@ export default {
                 return false;
             }
             this.createP(); // 创建或驳回
+
         },
         // 获取项目列表
         getProlist(){
@@ -192,6 +209,7 @@ export default {
                         alert("失败")
                     }
                 })
+                console.log("获取了")
         },
         // json-server 中的数据
         gettableDate(){
@@ -199,7 +217,6 @@ export default {
                 .then(result=>{
                     if(result){
                         this.tableData = result.data;
-                        // console.log(this.tableData)
                     }else{
                         alert("失败")
                     }
