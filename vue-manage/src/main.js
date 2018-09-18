@@ -16,13 +16,17 @@
   // import "bable-polyfill"
   // 2.7：加载模块  VueResource(发送ajax请求)
   import VueResource from 'vue-resource';
+  import http from './utils/http'
+  import api from './utils/api'
 // 3：注册
   // 3.1：注册UI组件库
   Vue.use(ElementUI,{size : 'small'});
   // 3.2：注册AJAX
   Vue.prototype.$axios = axios;
   // 3.2：将VueResource 注册vue
-  Vue.use(VueResource)
+  Vue.use(VueResource);
+  Vue.prototype.http = http;
+  Vue.prototype.api = api;
 
 // 4：Vue创建实例
   new Vue({

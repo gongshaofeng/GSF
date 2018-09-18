@@ -1,6 +1,8 @@
 <template>
     <div class="table_contain">
+        <!-- 表格 -->
         <el-table :data="tableData" style="width: 100%" :header-cell-style="{fontSize:'14px', color:'black'}">
+            <!-- 列表内嵌列表 -->
             <el-table-column type="expand">
                 <template slot-scope="props">
                     <el-form label-position="left" inline class="demo-table-expand">
@@ -31,6 +33,7 @@
                     </el-form>
                 </template>
             </el-table-column>
+            <!-- 表头 -->
             <el-table-column label="店铺名称" prop="name" </el-table-column>
             <el-table-column label="店铺地址" prop="address"></el-table-column>
             <el-table-column label="店铺介绍" prop="description"></el-table-column>
@@ -42,6 +45,46 @@
                 </template>
             </el-table-column>
         </el-table>
+        <!-- 分页 -->
+        <div class="Pagination">
+            <el-pagination @size-change="handleSizeChange" @curren-change="handleCurrentChange"
+                :current-page="currentPage" :page-size="20"
+                layout="total, prev, pager, next" :total="count">
+            </el-pagination>
+        </div>
+        <!-- 修改店铺信息 -->
+        <el-dialog title="修改店铺信息" v-model="dialogFormVisible">
+            <!-- 对应的店铺 -->
+            <el-form :model="selectTable">
+                <el-form-item label="店铺名称" label-width="100px">
+                    <el-input v-model="selectTable.name" auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="详细地址" label-width="100px">
+                    <el-autocomplete v-model="address.address" :fetch-suggestions="querySearchAsync"
+                        placeholder="请输入地址" style="width: 100%;"@select="addressSelect">
+                    </el-autocomplete>
+                    <span>当前城市：{{city.name}}</span>
+                </el-form-item>
+                <el-form-item label="店铺介绍" label-width="100px">
+                    <el-input v-model="selectTable.description"></el-input>
+                </el-form-item>
+                <el-form-item label="联系电话" label-width="100px">
+                    <el-input v-model="selectTable.phone"></el-input>
+                </el-form-item>
+                <el-form-item label="店铺分类" label-width="100px">
+                    <el-cascader :options="categoryOptions" v-model="selectedCategory" change-on-select>
+                    </el-cascader>
+                </el-form-item>
+                    <el-form-item label="商铺图片" label-width="100px">
+                        <el-upload class="avatar-uploader" :action="baseUrl + '/v1/addimg/shop'"
+                            :show-file-list="false" :on-success="handleServiceAvatarScucess"
+                            :before-upload="beforeAvatarUpload">
+                            <img v-if="selectTable.image_path" :src="baseImgPath + selectTable.image_path" class="avatar">
+                            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                        </el-upload>
+                    </el-form-item>
+            </el-form>
+        </el-dialog>
     </div>
 </template>
 <script>
@@ -49,13 +92,31 @@ export default {
     name: 'shoplist',
     data(){
         return{
-            tableData:[]
+            baseUrl,
+                baseImgPath,
+                city: {},
+                offset: 0,
+                limit: 20,
+                count: 0,
+                tableData: [],
+                currentPage: 1,
+                selectTable: {},
+                dialogFormVisible: false,
+                categoryOptions: [],
+                selectedCategory: [],
+                address: {},
         }
     },
     created(){
         this.getshoplist();
     },
     methods:{
+        async querySearchAsync(queryString, cb) {
+                console.log(2)
+        },
+        addressSelect(vale){
+            console.log(vale)
+        },
         handleEdit(index, row){
             console.log(index,row)
         },
@@ -100,7 +161,16 @@ export default {
                 console.log(err)
             })
             return false;
-        }
+        },
+        // 分页
+        handleSizeChange(val) {
+            console.log(`每页 ${val} 条`);
+        },
+        handleCurrentChange(val) {
+            this.currentPage = val;
+            this.offset = (val - 1)*this.limit;
+            this.getResturants()
+        },
     }
 }
 </script>
